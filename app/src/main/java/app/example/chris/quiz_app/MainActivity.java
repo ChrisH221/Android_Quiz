@@ -23,22 +23,13 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     JSONArray arr;
-    int score;
+    final int score =0;
     double time;
     boolean finish = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        JSONAsync db = new JSONAsync();
-        db.execute();
-        final Button buttonS = (Button) findViewById(R.id.button_start);
-        buttonS.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                gameLoop(arr, 0, score = 0);
-                time();
-               }
-        });
+        setupMain();
 
     }
 
@@ -48,42 +39,89 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+    public void setupMain(){
+        setContentView(R.layout.activity_main);
+        JSONAsync db = new JSONAsync();
+        db.execute();
+        httpPost post = new httpPost(10, "Chris");
+        post.execute();
 
-    public void parseQuestion(JSONArray arr){ this.arr=arr; }
+        final Button buttonS = (Button) findViewById(R.id.button_start);
+        buttonS.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                setContentView(R.layout.activity_main2);
+                gameLoop(arr, 0, score);
+                time();
+            }
+        });
+
+
+    }
+
+    public void parseQuestion(JSONArray arr){ this.arr = null; this.arr=arr; }
 
     public void time(){
 
-
         final TextView timer = (TextView) findViewById( R.id.timer );
-        new CountDownTimer(30000, 1000) { // adjust the milli seconds here
+        new CountDownTimer(10000, 1000) { // adjust the milli seconds here
 
             public void onTick(long millisUntilFinished) {
 
-                timer.setText(""+String.format("%d min, %d sec",
-                        TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished),
-                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+                timer.setText("" + String.format("%d min, %d sec",TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+                              TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
 
 
             }
 
             public void onFinish() {
-                finish = true;
+                finish(score);
             }
         }.start();
 
     }
 
+    public void finish(int score){
+
+        setContentView(R.layout.finish);
+
+        TextView st = (TextView)findViewById(R.id.score_text);
+        st.setText("For this round you scored:" + score);
+        JSONAsync db = new JSONAsync();
+        db.execute();
+
+        final Button buttonT = (Button) findViewById(R.id.button_again);
+        buttonT.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+            gameLoop(arr,0,0);
+            }
+        });
+
+
+        final Button buttonM = (Button) findViewById(R.id.button_main);
+        buttonM.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+               setupMain();
+
+            }
+        });
+
+
+    }
+
+
     public int gameLoop(final JSONArray arr, final int count, final int score){
 
 
-        if(finish == true) return score;
+        if(finish == true){return 0;}// finish(score);
+
         final String answer;
 
-        setContentView(R.layout.activity_main2);
+
         TextView tv = (TextView)findViewById(R.id.textView1);
         TextView s = (TextView)findViewById(R.id.score);
-        s.setText("SCORE:"+score);
+        s.setText("SCORE:" + score);
         try {
             JSONObject json_obj = arr.getJSONObject(count);
             String question = json_obj.getString("question");
@@ -94,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
-        final Button buttonT = (Button) findViewById(R.id.button_true);
+        final Button buttonT = (Button) findViewById(R.id.button_again);
         buttonT.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -111,8 +149,8 @@ public class MainActivity extends AppCompatActivity {
                 else gameLoop(arr,count,score);
             }
         });
+    return 0;
 
-        return score;
     }
 
     class JSONAsync extends AsyncTask<Void, JSONArray, String> {

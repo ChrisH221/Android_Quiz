@@ -44,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Exit"
-        android:id="@+id/button_true"
+        android:id="@+id/button_again"
         android:layout_above="@+id/button_score"
         android:layout_toLeftOf="@+id/button_score"
         android:layout_toStartOf="@+id/button_score" />

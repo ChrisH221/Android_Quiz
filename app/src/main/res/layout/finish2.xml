@@ -7,32 +7,22 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_main2" tools:context=".MainActivity"
+    tools:showIn="@layout/finish.xml" tools:context=".MainActivity"
     android:background="@color/material_blue_grey_800">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="False"
-        android:id="@+id/button_false"
+        android:text="main"
+        android:id="@+id/button_main"
         android:layout_alignTop="@+id/button_again"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/textView1"
-        android:layout_marginTop="139dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/material_deep_teal_200" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="True"
+        android:text="Play"
         android:id="@+id/button_again"
         android:layout_marginBottom="140dp"
         android:layout_alignParentBottom="true"
@@ -52,10 +42,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/timer"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textColor="#ff0000"/>
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/score_text"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
