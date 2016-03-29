@@ -30,14 +30,14 @@ class httpPost extends AsyncTask<Void, Void, String> {
 
     protected String doInBackground(Void... args) {
 
-        String site = "http://52.18.108.189/addUser.php";
+        String site = "http://52.18.108.189/checkUser.php";
         try {
             URL url = new URL(site);
             URLConnection urlConn = url.openConnection();
             HttpURLConnection httpConn = (HttpURLConnection) urlConn;
             httpConn.setDoOutput(true);
             OutputStream os = httpConn.getOutputStream();
-            String POST_PARAMS = "score=10@player=chris";
+            String POST_PARAMS = "username=" +playerName + "&PASSWORD=" + score;
             System.out.println(POST_PARAMS);
             os.write(POST_PARAMS.getBytes());
             int responseCode = httpConn.getResponseCode();
