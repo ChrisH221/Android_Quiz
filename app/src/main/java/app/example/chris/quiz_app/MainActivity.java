@@ -29,7 +29,7 @@ import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
-
+import android.graphics.Color;
 
 public class MainActivity extends AppCompatActivity {
     JSONArray arr;
@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean finish = false;
     JSONArray scores;
     checkScore checkScore;
+    public boolean answered = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,13 +88,19 @@ public class MainActivity extends AppCompatActivity {
     public void time(){
 
         final TextView timer = (TextView) findViewById( R.id.timer );
-        new CountDownTimer(10000, 1000) { // adjust the milli seconds here
+        new CountDownTimer(120000, 1000) { // adjust the milli seconds here
 
             public void onTick(long millisUntilFinished) {
 
                 timer.setText("" + String.format("%d min, %d sec",TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
                               TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+                if(answered){
+                    Button buttonT = (Button) findViewById(R.id.button_again);
+                    Button buttonF = (Button) findViewById(R.id.button_false);
+                    buttonT.setBackgroundColor(Color.GRAY);
+                    buttonF.setBackgroundColor(Color.GRAY);
 
+                }
 
             }
 
@@ -118,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
        boolean highscore = false;
        for(int x = 0; x < scores.length(); x++){
-           System.out.println("this far!!!!!!!!!!" + x);
+
             try {
                JSONObject json_obj = scores.getJSONObject(x);
                 int pscore = json_obj.getInt("score");
@@ -203,25 +210,40 @@ public class MainActivity extends AppCompatActivity {
         }
 
         final Button buttonT = (Button) findViewById(R.id.button_again);
+        final Button buttonF = (Button) findViewById(R.id.button_false);
+
         buttonT.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 if(answer.equals("1") ){
+                    buttonT.setBackgroundColor(Color.GREEN);
                     setScore(10);
-                     gameLoop(arr, count, getScore());
+                    answered = true;
+                    gameLoop(arr, count, getScore());
                 }
                 else {
+                    buttonT.setBackgroundColor(Color.RED);
+                    answered = true;
                     gameLoop(arr,count,getScore());
                 }
             }
         });
 
-        final Button buttonF = (Button) findViewById(R.id.button_false);
+
         buttonF.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                if(answer.equals("0") ){ setScore(10);gameLoop(arr, count, getScore());}
-                else gameLoop(arr,count,getScore());
+                if(answer.equals("0") ){
+                    buttonF.setBackgroundColor(Color.GREEN);
+                    setScore(10);
+                    answered = true;
+                    gameLoop(arr, count, getScore());
+                }
+                else {
+                    buttonF.setBackgroundColor(Color.RED);
+                    answered = true;
+                    gameLoop(arr, count, getScore());
+                }
             }
         });
     return 0;
