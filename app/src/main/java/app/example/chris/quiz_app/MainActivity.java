@@ -1,6 +1,7 @@
 package app.example.chris.quiz_app;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -22,11 +23,22 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.TimeUnit;
 
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.view.LayoutInflater;
+import android.view.View.OnClickListener;
+import android.widget.EditText;
+
+
 public class MainActivity extends AppCompatActivity {
     JSONArray arr;
     int score =0;
     double time;
     public boolean finish = false;
+    JSONArray scores;
+    checkScore checkScore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,17 +47,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+
+    public void getScores(){
+               checkScore  = new checkScore();
+               checkScore.execute();
     }
+
     public void setupMain(){
         setScore(0);
         setContentView(R.layout.activity_main);
         JSONAsync db = new JSONAsync();
         db.execute();
+        getScores();
 
 
         final Button buttonS = (Button) findViewById(R.id.button_start);
@@ -57,10 +70,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final Button buttonE = (Button) findViewById(R.id.button_again);
+        final Button buttonE = (Button) findViewById(R.id.button_score);
         buttonE.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
+                Intent intent = new Intent(v.getContext(), scoreBoard.class);
+                startActivity(intent);
             }
         });
 
@@ -84,38 +98,42 @@ public class MainActivity extends AppCompatActivity {
 
             public void onFinish() {
                 finish = true;
-                finish(getScore());
+                finish();
             }
         }.start();
 
     }
 
-    public void finish(int score){
+    public void finish(){
 
         setContentView(R.layout.finish);
 
+        this.scores = checkScore.getArr();
+        System.out.println(scores.length());
         TextView st = (TextView)findViewById(R.id.score_text);
-        st.setText("For this round you scored:" + score);
+        st.setText("For this round you scored:" + getScore());
         JSONAsync db = new JSONAsync();
         db.execute();
 
-        //checkScore checkScore = new checkScore();
-       // checkScore.execute();
-     //   JSONArray scores = checkScore.getArr();
-      //  for(int x = 0; x < scores.length()-1; x++){
+       boolean highscore = false;
+       for(int x = 0; x < scores.length(); x++){
+           System.out.println("this far!!!!!!!!!!" + x);
+            try {
+               JSONObject json_obj = scores.getJSONObject(x);
+                int pscore = json_obj.getInt("score");
+               if(getScore() > pscore){
+                   highscore = true;
+            }
+                if(highscore & x == scores.length()-1){
+                    showInputDialog();
 
-      //      try {
-       //         JSONObject json_obj = arr.getJSONObject(x);
-        //        int pscore = json_obj.getInt("score");
-        //       if(score > pscore){
-               // httpPost post = new httpPost();
-        //       }
+                }
 
-       //     } catch (JSONException e) {
-        //        throw new RuntimeException(e);
-        //    }
+            } catch (JSONException e) {
+               throw new RuntimeException(e);
+            }
 
-     //   }
+       }
 
 
 
@@ -208,6 +226,39 @@ public class MainActivity extends AppCompatActivity {
     return 0;
 
     }
+
+
+    public void showInputDialog() {
+
+
+        LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+        View promptView = layoutInflater.inflate(R.layout.input, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+        alertDialogBuilder.setView(promptView);
+
+        final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
+
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        String username = editText.getText().toString();
+                        httpPost  post = new httpPost(username, getScore());
+                        post.execute();
+
+                    }
+                })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+    }
+
 
     class JSONAsync extends AsyncTask<Void, JSONArray, String> {
 

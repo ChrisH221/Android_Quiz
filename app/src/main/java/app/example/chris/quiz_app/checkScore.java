@@ -22,7 +22,12 @@ class checkScore extends AsyncTask<Void, JSONArray, String> {
     JSONArray arr;
 
 
-    public void parseQuestion(JSONArray arr){ this.arr = null; this.arr=arr; }
+    public void parseScore(JSONArray arr){
+
+        this.arr=arr;
+
+
+    }
 
     public JSONArray getArr() {
         return arr;
@@ -63,7 +68,8 @@ class checkScore extends AsyncTask<Void, JSONArray, String> {
 
         try {
             JSONArray res = new JSONArray(result);
-            // parseQuestion(res);
+            parseScore(res);
+            System.out.println("COMPLETE");
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
