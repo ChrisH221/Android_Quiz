@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         buttonE.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), scoreBoard.class);
+                intent.putExtra("jsonArray", checkScore.getArr().toString());
                 startActivity(intent);
             }
         });
