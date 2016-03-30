@@ -19,11 +19,18 @@ import java.net.URLConnection;
 
 class checkScore extends AsyncTask<Void, JSONArray, String> {
 
+    JSONArray arr;
 
+
+    public void parseQuestion(JSONArray arr){ this.arr = null; this.arr=arr; }
+
+    public JSONArray getArr() {
+        return arr;
+    }
 
     protected String doInBackground(Void... args) {
 
-        String site = "http://52.18.108.189/getquestion.php";
+        String site = "http://52.18.108.189/getscore.php";
         try {
             URL url = new URL(site);
             URLConnection urlConn = url.openConnection();

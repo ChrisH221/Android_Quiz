@@ -23,14 +23,15 @@ class httpPost extends AsyncTask<Void, Void, String> {
 
     public httpPost(int score, String playerName){
 
-
+   this.score = score;
+   this.playerName = playerName;
 
 
     }
 
     protected String doInBackground(Void... args) {
 
-        String site = "http://52.18.108.189/checkUser.php";
+        String site = "http://52.18.108.189/addScore.php";
         try {
             URL url = new URL(site);
             URLConnection urlConn = url.openConnection();

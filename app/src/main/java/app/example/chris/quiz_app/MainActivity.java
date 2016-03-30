@@ -99,6 +99,26 @@ public class MainActivity extends AppCompatActivity {
         JSONAsync db = new JSONAsync();
         db.execute();
 
+        //checkScore checkScore = new checkScore();
+       // checkScore.execute();
+     //   JSONArray scores = checkScore.getArr();
+      //  for(int x = 0; x < scores.length()-1; x++){
+
+      //      try {
+       //         JSONObject json_obj = arr.getJSONObject(x);
+        //        int pscore = json_obj.getInt("score");
+        //       if(score > pscore){
+               // httpPost post = new httpPost();
+        //       }
+
+       //     } catch (JSONException e) {
+        //        throw new RuntimeException(e);
+        //    }
+
+     //   }
+
+
+
         final Button buttonT = (Button) findViewById(R.id.button_again);
         buttonT.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
