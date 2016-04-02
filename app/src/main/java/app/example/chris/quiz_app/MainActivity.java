@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     JSONArray scores;
     checkScore checkScore;
     public boolean answered = false;
+    public int multiplyer = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,13 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("jsonArray", checkScore.getArr().toString());
                 startActivity(intent);
             }
+        });
+
+        final Button buttonC = (Button) findViewById(R.id.button_again);
+        buttonC.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                finish();
+               }
         });
 
 
@@ -170,6 +178,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void resetMult(){
+
+        multiplyer = 1;
+
+    }
+
+    public void setMult(int s){
+
+        multiplyer = multiplyer + s;
+
+    }
+
+    public int getMult(){
+
+        return multiplyer;
+
+    }
+
+
     public void scoreZero(){
 
        score = 0;
@@ -217,13 +244,15 @@ public class MainActivity extends AppCompatActivity {
 
                 if(answer.equals("1") ){
                     buttonT.setBackgroundColor(Color.GREEN);
-                    setScore(10);
+                    setScore(10 * getMult());
+                    setMult(1);
                     answered = true;
                     gameLoop(arr, count, getScore());
                 }
                 else {
                     buttonT.setBackgroundColor(Color.RED);
                     answered = true;
+                    resetMult();
                     gameLoop(arr,count,getScore());
                 }
             }
@@ -235,13 +264,15 @@ public class MainActivity extends AppCompatActivity {
 
                 if(answer.equals("0") ){
                     buttonF.setBackgroundColor(Color.GREEN);
-                    setScore(10);
+                    setScore(10 * getMult());
+                    setMult(1);
                     answered = true;
                     gameLoop(arr, count, getScore());
                 }
                 else {
                     buttonF.setBackgroundColor(Color.RED);
                     answered = true;
+                    resetMult();
                     gameLoop(arr, count, getScore());
                 }
             }

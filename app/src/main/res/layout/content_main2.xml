@@ -47,7 +47,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="54dp"
-        android:textColor="#ff0000"/>
+        android:textColor="#FFFFFF"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -56,6 +56,6 @@
         android:id="@+id/timer"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textColor="#ff0000"/>
+        android:textColor="#FFFFFF"/>
 
 </RelativeLayout>
