@@ -1,10 +1,15 @@
 package app.example.chris.quiz_app;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Menu;
@@ -22,6 +27,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.TimeUnit;
+import android.os.Vibrator;
+
 
 
 import android.app.AlertDialog;
@@ -40,12 +47,14 @@ public class MainActivity extends AppCompatActivity {
     checkScore checkScore;
     public boolean answered = false;
     public int multiplyer = 1;
-
+    MediaPlayer player = MediaPlayer.create(this,Settings.System.DEFAULT_RINGTONE_URI);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setScore(0);
         setupMain();
+
 
     }
 
@@ -68,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 setContentView(R.layout.activity_main2);
                 gameLoop(arr, 0, getScore());
-                time();
+                               time();
             }
         });
 
@@ -94,9 +103,9 @@ public class MainActivity extends AppCompatActivity {
     public void parseQuestion(JSONArray arr){ this.arr = null; this.arr=arr; }
 
     public void time(){
-
+        final Vibrator vi = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         final TextView timer = (TextView) findViewById( R.id.timer );
-        new CountDownTimer(120000, 1000) { // adjust the milli seconds here
+        new CountDownTimer(60000, 1000) { // adjust the milli seconds here
 
             public void onTick(long millisUntilFinished) {
 
@@ -110,10 +119,17 @@ public class MainActivity extends AppCompatActivity {
 
                 }
 
+                if(millisUntilFinished < 10000 ) {
+                    vi.vibrate(1000);
+
+                }
+
+
             }
 
             public void onFinish() {
                 finish = true;
+                player.stop();
                 finish();
             }
         }.start();
@@ -128,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(scores.length());
         TextView st = (TextView)findViewById(R.id.score_text);
         st.setText("For this round you scored:" + getScore());
+
         JSONAsync db = new JSONAsync();
         db.execute();
 
@@ -218,6 +235,8 @@ public class MainActivity extends AppCompatActivity {
     public int gameLoop(final JSONArray arr, final int count, int score){
 
 
+
+        player.start();
         if(finish == true){return 0;}// finish(score);
 
         final String answer;
@@ -226,6 +245,8 @@ public class MainActivity extends AppCompatActivity {
         TextView tv = (TextView)findViewById(R.id.textView1);
         TextView s = (TextView)findViewById(R.id.score);
         s.setText("SCORE:" + getScore());
+        TextView mult = (TextView)findViewById(R.id.mult);
+        mult.setText("Multiplyer:" + getMult());
         try {
             JSONObject json_obj = arr.getJSONObject(count);
             String question = json_obj.getString("question");
@@ -242,11 +263,13 @@ public class MainActivity extends AppCompatActivity {
         buttonT.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
+
                 if(answer.equals("1") ){
                     buttonT.setBackgroundColor(Color.GREEN);
                     setScore(10 * getMult());
                     setMult(1);
                     answered = true;
+
                     gameLoop(arr, count, getScore());
                 }
                 else {

@@ -52,10 +52,21 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text="timer"
         android:id="@+id/timer"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:textColor="#FFFFFF"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="mult"
+        android:id="@+id/mult"
+        android:layout_alignLeft="@+id/button_again"
+        android:layout_alignStart="@+id/button_again"
+        android:layout_alignTop="@+id/score"
         android:textColor="#FFFFFF"/>
 
 </RelativeLayout>
