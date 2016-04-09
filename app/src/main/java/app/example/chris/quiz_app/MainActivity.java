@@ -47,17 +47,20 @@ public class MainActivity extends AppCompatActivity {
     checkScore checkScore;
     public boolean answered = false;
     public int multiplyer = 1;
-    MediaPlayer player = MediaPlayer.create(this,Settings.System.DEFAULT_RINGTONE_URI);
+    MediaPlayer player;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setScore(0);
         setupMain();
-
+        this.player = MediaPlayer.create(this,Settings.System.DEFAULT_RINGTONE_URI);
 
     }
-
+    @Override
+    public void onBackPressed() {
+    }
 
     public void getScores(){
                checkScore  = new checkScore();
@@ -93,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         final Button buttonC = (Button) findViewById(R.id.button_again);
         buttonC.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                finish();
+                System.exit(0);
                }
         });
 
@@ -119,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }
 
-                if(millisUntilFinished < 10000 ) {
+                if(millisUntilFinished < 3000 ) {
                     vi.vibrate(1000);
 
                 }
