@@ -69,7 +69,6 @@ class checkScore extends AsyncTask<Void, JSONArray, String> {
         try {
             JSONArray res = new JSONArray(result);
             parseScore(res);
-            System.out.println("COMPLETE");
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

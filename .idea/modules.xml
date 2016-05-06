@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../...iml" filepath="$PROJECT_DIR$/../...iml" />
       <module fileurl="file://$PROJECT_DIR$/Android_Quiz.iml" filepath="$PROJECT_DIR$/Android_Quiz.iml" />
+      <module fileurl="file://$USER_HOME$/Documents.iml" filepath="$USER_HOME$/Documents.iml" />
       <module fileurl="file://$PROJECT_DIR$/../ExpandableButtonMenu/ExpandableButtonMenu.iml" filepath="$PROJECT_DIR$/../ExpandableButtonMenu/ExpandableButtonMenu.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/../ExpandableButtonMenu/library/library.iml" filepath="$PROJECT_DIR$/../ExpandableButtonMenu/library/library.iml" />
