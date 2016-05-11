@@ -3,12 +3,7 @@ package app.example.chris.quiz_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -45,7 +40,7 @@ public class scoreBoard extends AppCompatActivity {
     public void setupList(){
 
 
-        ArrayList<String> items = new ArrayList<String>();
+        ArrayList<String> items = new ArrayList<>();
         System.out.println(jArray.length());
         try {
 

@@ -75,10 +75,27 @@ public class finish extends Activity {
             }
 
         }
+        final Intent intentAgain = new Intent(this, gameLoop.class);
+        final Intent intentHome = new Intent(this, MainActivity.class);
+
+        Button buttonT = (Button) findViewById(R.id.button_again);
+        buttonT.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(intentAgain);
+            }
+        });
+
+
+        Button buttonM = (Button) findViewById(R.id.button_main);
+        buttonM.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(intentHome);
+            }
+        });
+
     }
 
-    Intent intent = new Intent(v.getContext(), gameLoop.class);
-    startActivity(intent);
+
     public void showInputDialog() {
 
 
