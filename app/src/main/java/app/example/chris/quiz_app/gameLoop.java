@@ -29,6 +29,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Chris on 05/05/2016.
+ * The gameLoop class handles all the logic related to playing a round of the quiz game.
+ * This class features a method called gameLoop that populates the
  */
 
     public class gameLoop extends Activity {
@@ -39,6 +41,7 @@ import java.util.concurrent.TimeUnit;
         public int multiplyer = 1;
         MediaPlayer player;
         boolean playing = false;
+        boolean tickOne = false;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -46,24 +49,21 @@ import java.util.concurrent.TimeUnit;
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main2);
             setScore(0);
-            this.player = MediaPlayer.create(this, Settings.System.DEFAULT_RINGTONE_URI);
-            JSONAsync js = new JSONAsync();
+            this.player = MediaPlayer.create(this, Settings.System.DEFAULT_RINGTONE_URI);//Music player setup to play default ringtone
+            JSONAsync js = new JSONAsync();// Downloads the questions
             js.execute();
+            getScores();
 
 
         }
         @Override
-        public void onBackPressed() {
+        public void onBackPressed() {//disable the back button while playing game
         }
 
         public void getScores(){
             checkScore  = new checkScore();
             checkScore.execute();
         }
-
-
-
-
 
 
         public void parseQuestion(JSONArray arr){
@@ -74,27 +74,43 @@ import java.util.concurrent.TimeUnit;
 
         public void time(){
             final Vibrator vi = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            final TextView timer = (TextView) findViewById( R.id.timer );
+            final TextView timer = (TextView) findViewById(R.id.timer);
+
             new CountDownTimer(60000, 1000) {
 
                 public void onTick(long millisUntilFinished) {
-
+                    /* Code modified from method onTick
+                     * obtained from http://stackoverflow.com/questions/10032003/how-to-make-a-countdown-timer-in-android
+                     */
                     timer.setText("" + String.format("%d min, %d sec", TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
                             TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
-                    if(arr.length() > 1) {
-                        if (answered) {
+                    if(arr.length() > 3) {//Check question array size
+                        if (answered) {// The flag when the true or false buttons are pressed
                             Button buttonT = (Button) findViewById(R.id.button_again);
                             Button buttonF = (Button) findViewById(R.id.button_false);
-                            buttonT.setBackgroundColor(Color.GRAY);
-                            buttonF.setBackgroundColor(Color.GRAY);
-                            answered = false;
-                            gameLoop(arr);
+                            if(tickOne) {//For waiting one full tick
+                                /*
+                                 * Configuration for resetting the buttons and then calling
+                                 * the gameLoop method with the next question.
+                                 */
+                                tickOne = false;
+                                buttonT.setBackgroundColor(Color.GRAY);
+                                buttonF.setBackgroundColor(Color.GRAY);
+                                answered = false;
+                                buttonT.setEnabled(true);
+                                buttonF.setEnabled(true);
+                                gameLoop(arr);
+                            }else{
+                                tickOne = true;//Ensure one tick between answering questions
 
+                            }
                         }
 
                         if (millisUntilFinished < 5000) {
                             vi.vibrate(1000);
                         }
+
+
 
                     }
                     else{
@@ -120,8 +136,12 @@ import java.util.concurrent.TimeUnit;
         intent.putExtra("jsonArray", checkScore.getArr().toString());
 
         startActivity(intent);
+        System.exit(0);
     }
 
+    /*
+     * Getters and setters for the score multiplyer
+     */
         public void resetMult(){
 
             multiplyer = 1;
@@ -141,7 +161,9 @@ import java.util.concurrent.TimeUnit;
         }
 
 
-
+    /*
+     * Getters and setters for the score
+     */
         public void setScore(int s){
 
             score = score + s;
@@ -155,17 +177,23 @@ import java.util.concurrent.TimeUnit;
         }
 
 
+    /*
+     *  Game loop for setting up the next question and deciding if the
+     *  player has selected the appropriate answer.
+     */
 
         public int gameLoop(final JSONArray arr){
-            if(!playing){
-                time();
+            if(!playing){//Check to see if game is underway
+                time();//Start the time
                 playing = true;
             }
 
-            player.start();
+            player.start();//Start the music
 
             final String answer;
-
+            /**
+             * Setup the question, display the score and display the multiplier.
+             */
             TextView tv = (TextView)findViewById(R.id.textView1);
             TextView s = (TextView)findViewById(R.id.score);
             s.setText("SCORE:" + getScore());
@@ -189,18 +217,20 @@ import java.util.concurrent.TimeUnit;
             buttonT.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
 
+                    buttonT.setEnabled(false);
+                    buttonF.setEnabled(false);
 
-                    if(answer.equals("1") ){
-                        buttonT.setBackgroundColor(Color.GREEN);
-                        setScore(10 * getMult());
-                        setMult(1);
-                        answered = true;
+                    if(answer.equals("1") ){//If answer is correct
+                        buttonT.setBackgroundColor(Color.GREEN);//Set Button to green
+                        setScore(10 * getMult());//Add to the score
+                        setMult(1);//Add one to the multiplier
+                        answered = true;//Flag for the timer
 
 
                     }
-                    else {
-                        buttonT.setBackgroundColor(Color.RED);
-                        answered = true;
+                    else {//Wrong answer
+                        buttonT.setBackgroundColor(Color.RED);//Set Button to green
+                        answered = true;//Flag for the timer
                         resetMult();
 
                     }
@@ -210,7 +240,8 @@ import java.util.concurrent.TimeUnit;
 
             buttonF.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-
+                    buttonT.setEnabled(false);
+                    buttonF.setEnabled(false);
                     if (answer.equals("0")) {
                         buttonF.setBackgroundColor(Color.GREEN);
                         setScore(10 * getMult());
@@ -231,7 +262,9 @@ import java.util.concurrent.TimeUnit;
 
 
 
-
+/*
+ * Inner class that extends AsyncTask to download sets of questions from the server.
+ */
 
         class JSONAsync extends AsyncTask<Void, JSONArray, String> {
 
@@ -272,8 +305,8 @@ import java.util.concurrent.TimeUnit;
 
                 try {
                     JSONArray res = new JSONArray(result);
-                    parseQuestion(res);
-                    getScores();
+                    parseQuestion(res);//Assigns the resulting array to the global variable
+
 
                 } catch (JSONException e) {
                     throw new RuntimeException(e);

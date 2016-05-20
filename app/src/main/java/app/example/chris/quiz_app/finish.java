@@ -19,12 +19,17 @@ import org.json.JSONObject;
 
 /**
  * Created by Chris on 05/05/2016.
+ *
+ * The finish activity display the final view to the user. It parses
+ * the scores that were downloaded in the gameLoop activity into a JSONArray and
+ * then checks if the user has scored high enough to be placed on the high scoring
+ * board.
+ *
  */
 public class finish extends Activity {
 
 
     JSONArray scores;
-    checkScore checkScore;
     int score;
 
     @Override
@@ -35,9 +40,11 @@ public class finish extends Activity {
 
 
     }
-
-
-
+/*
+ *The finish method displays the final view. It also parses the JSON string
+ * into a JSONArray and checks if the user score is greater than any of the scores
+ * on the scoreboard.
+ */
     public void finish() {
 
         setContentView(R.layout.finish);
@@ -67,7 +74,7 @@ public class finish extends Activity {
                     highscore = true;
                 }
                 if (highscore & x == scores.length() - 1) {
-                    showInputDialog();
+                    Dialog();// If they score high enough open the AlertDialog
                 }
 
             } catch (JSONException e) {
@@ -75,13 +82,14 @@ public class finish extends Activity {
             }
 
         }
-        final Intent intentAgain = new Intent(this, gameLoop.class);
-        final Intent intentHome = new Intent(this, MainActivity.class);
+        final Intent intentAgain = new Intent(this, gameLoop.class);//Start the game again
+        final Intent intentHome = new Intent(this, MainActivity.class);//Return to the first screen
 
         Button buttonT = (Button) findViewById(R.id.button_again);
         buttonT.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(intentAgain);
+                System.exit(0);
             }
         });
 
@@ -90,13 +98,18 @@ public class finish extends Activity {
         buttonM.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(intentHome);
+                System.exit(0);
             }
         });
 
     }
 
+    /*
+     * A method for opening a AlertDialog. This method is called if the user has scored high enough
+      * to enter their username on the high score board.
+     */
 
-    public void showInputDialog() {
+    public void Dialog() {
 
 
         LayoutInflater layoutInflater = LayoutInflater.from(finish.this);
@@ -110,8 +123,8 @@ public class finish extends Activity {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         String username = editText.getText().toString();
-                        httpPost post = new httpPost(username, score);
-                        post.execute();
+                        httpPost post = new httpPost(username, score);// For adding the current user to the scoreboard
+                        post.execute();//Run the AsyncTask
 
                     }
                 })
@@ -123,7 +136,7 @@ public class finish extends Activity {
                         });
 
 
-        AlertDialog alert = alertDialogBuilder.create();
-        alert.show();
+        AlertDialog alert = alertDialogBuilder.create();// Create the AlertDialog
+        alert.show();//Show the AlertDialog to the user
     }
 }

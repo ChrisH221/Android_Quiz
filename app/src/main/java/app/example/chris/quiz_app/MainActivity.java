@@ -30,6 +30,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), gameLoop.class);
                 startActivity(intent);
+                System.exit(0);
             }
         });
 
@@ -39,6 +40,7 @@ public class MainActivity extends Activity {
                 Intent intent = new Intent(v.getContext(), scoreBoard.class);
                 intent.putExtra("jsonArray", cs.getArr().toString());
                 startActivity(intent);
+                System.exit(0);
             }
         });
 
@@ -47,7 +49,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 System.exit(0);
             }
-        });
+        });// Exit the app
 
 
     }

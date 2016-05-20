@@ -14,18 +14,24 @@ import java.net.URLConnection;
 
 /**
  * Created by Chris on 29/03/2016.
+ *
+ * Extends AsyncTask to download the list of scores held in the database.
+ * This data is in JSON format and used to generate a JSONArray Object.
  */
 
 
 class checkScore extends AsyncTask<Void, JSONArray, String> {
 
-    JSONArray arr;
+    JSONArray arr;// The JSONArray
 
 
+    /*
+    * A method for assigning the downloaded JSONArray to the global JSONArray variable.
+    * This variable is then accessed by the scoreBoard class and in the finish class.
+     */
     public void parseScore(JSONArray arr){
 
         this.arr=arr;
-
 
     }
 
@@ -67,8 +73,8 @@ class checkScore extends AsyncTask<Void, JSONArray, String> {
     protected void onPostExecute(String result) {
 
         try {
-            JSONArray res = new JSONArray(result);
-            parseScore(res);
+            JSONArray res = new JSONArray(result);// Convert the data into a JSONArray
+            parseScore(res);//Assign the array to a global variable making it accessible to other activites
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
